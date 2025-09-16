@@ -1,0 +1,30 @@
+{
+  "name": "screenshare-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --filter \"*\" dev",
+    "dev:backend": "bun run --filter @screenshare/backend dev",
+    "dev:frontend": "bun run --filter @screenshare/frontend dev",
+    "dev:desktop": "bun run --filter @screenshare/desktop dev",
+    "build": "bun run --filter \"*\" build",
+    "build:backend": "bun run --filter @screenshare/backend build",
+    "build:frontend": "bun run --filter @screenshare/frontend build",
+    "build:desktop": "bun run --filter @screenshare/desktop build",
+    "clean": "bun run --filter \"*\" clean",
+    "install:all": "bun install",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down",
+    "db:reset": "docker-compose down -v && docker-compose up -d"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "debug": "^4.4.1"
+  }
+}
