@@ -1,30 +1,40 @@
 {
-  "name": "screenshare-app",
+  "name": "screenshare-v2",
   "version": "1.0.0",
   "private": true,
+  "description": "Modern Screen Share & Remote Desktop Application",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun run --filter \"*\" dev",
-    "dev:backend": "bun run --filter @screenshare/backend dev",
-    "dev:frontend": "bun run --filter @screenshare/frontend dev",
-    "dev:desktop": "bun run --filter @screenshare/desktop dev",
-    "build": "bun run --filter \"*\" build",
-    "build:backend": "bun run --filter @screenshare/backend build",
-    "build:frontend": "bun run --filter @screenshare/frontend build",
-    "build:desktop": "bun run --filter @screenshare/desktop build",
-    "clean": "bun run --filter \"*\" clean",
-    "install:all": "bun install",
-    "db:start": "docker-compose up -d",
-    "db:stop": "docker-compose down",
-    "db:reset": "docker-compose down -v && docker-compose up -d"
+    "install-all": "npm install && npm run install:signaling && npm run install:client",
+    "install:signaling": "cd apps/signaling && npm install",
+    "install:client": "cd apps/client && npm install",
+    "dev": "concurrently \"npm run dev:signaling\" \"npm run dev:client\"",
+    "dev:signaling": "cd apps/signaling && npm run dev",
+    "dev:client": "cd apps/client && npm run dev",
+    "dev:agent": "cd apps/agent && npm run tauri dev",
+    "build": "npm run build:signaling && npm run build:client && npm run build:agent",
+    "build:signaling": "cd apps/signaling && npm run build",
+    "build:client": "cd apps/client && npm run build",
+    "build:agent": "cd apps/agent && npm run tauri build",
+    "lint": "npm run lint:signaling && npm run lint:client",
+    "lint:signaling": "cd apps/signaling && npm run lint",
+    "lint:client": "cd apps/client && npm run lint",
+    "clean": "rm -rf node_modules apps/*/node_modules apps/*/dist apps/*/build",
+    "setup": "npm run install-all && npm run setup:db",
+    "setup:db": "echo 'Starting MongoDB on localhost:27017...' && echo 'Create database: screenshare'",
+    "start:prod": "concurrently \"npm run start:signaling\" \"npm run start:client\"",
+    "start:signaling": "cd apps/signaling && npm run start",
+    "start:client": "cd apps/client && npm run build && npx serve -s build -p 3000"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0"
+    "concurrently": "^8.2.0",
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
   },
-  "dependencies": {
-    "debug": "^4.4.1"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
